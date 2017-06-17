@@ -210,7 +210,7 @@ var Firebase = {};
 						});
 					},
 
-					getOneListener: function(s, f): {
+					getOneListener: function(s, f) {
 						chatInterface.getOneListener(s, f);
 					},
 
