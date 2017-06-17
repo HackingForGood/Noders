@@ -99,7 +99,7 @@ var Firebase = {};
 
 		getChatParticipants: function(chatID) {
 			return chatID.split(CHAT_ID_DELIMITER);
-		}
+		},
 
 		epoch: function() {
 			return (new Date).getTime();
