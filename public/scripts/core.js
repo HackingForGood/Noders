@@ -364,7 +364,7 @@ var Firebase = {};
 						if (!IS_AUTHED()) return;
 
 						// Remove from both lists if existed in both
-						chatInterface.removeListener(GET_AUTHED_UID, function() {
+						chatInterface.removeListener(GET_AUTHED_UID(), function() {
 							chatInterface.removeLooker(lookerUID, function() {
 								// Listener UID, Looker UID
 								chatInterface.startChat(GET_AUTHED_UID(), lookerUID, s, f);
