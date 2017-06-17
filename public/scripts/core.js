@@ -139,7 +139,7 @@ var Firebase = {};
 			chat: {
 				getOneListener: function(s, f) {
 					db.ref(CHAT_LISTENERS_PATH).on("value", function(val) {
-						listeners = CHAT_LISTENERS_SPLICER(val.val()[CHAT_LISTENERS_KEY]);
+						var listeners = CHAT_LISTENERS_SPLICER(val.val()[CHAT_LISTENERS_KEY]);
 						if (listeners.length == 0) {
 							f(null);
 						} else {
@@ -148,15 +148,32 @@ var Firebase = {};
 					});
 				},
 
+				getOneLooker: function(s, f) {
+					db.ref(CHAT_LOOKERS_PATH).on("value", function(val) {
+						var lookers = CHAT_LOOKERS_SPLICER(val.val()[CHAT_LOOKERS_KEY]);
+						if (lookers.length == 0) {
+							f(null);
+						} else {
+							s(lookers[0]); // TODO: Randomize?
+						}
+					});
+				},
+
 				addToLookers: function(uid, callback) {
 					db.ref(CHAT_LOOKERS_PATH).once("value").then(function(val) {
-						db.ref(CHAT_LOOKERS_PATH).set(val.val()[CHAT_LOOKERS_KEY].concat(uid)).then(callback);
+						var newVal = val.val();
+						newVal[CHAT_LOOKERS_KEY] = newVal[CHAT_LOOKERS_KEY].concat(uid);
+
+						db.ref(CHAT_LOOKERS_PATH).set(newVal).then(callback);
 					});
 				},
 
 				addToListeners: function(uid, callback) {
 					db.ref(CHAT_LISTENERS_PATH).once("value").then(function(val) {
-						db.ref(CHAT_LISTENERS_PATH).set(val.val()[CHAT_LISTENERS_KEY].concat(uid)).then(callback);
+						var newVal = val.val();
+						newVal[CHAT_LISTENERS_KEY] = newVal[CHAT_LISTENERS_KEY].concat(uid);
+
+						db.ref(CHAT_LISTENERS_PATH).set(newVal).then(callback);
 					});
 				},
 
@@ -164,7 +181,7 @@ var Firebase = {};
 					db.ref(CHAT_LOOKERS_PATH).once("value").then(function(val) {
 						var lst = val.val()[CHAT_LOOKERS_KEY];
 						if (lst.indexOf(uid) != -1) {
-							lst.splice(st.indexOf(uid), 1);
+							lst.splice(lst.indexOf(uid), 1);
 							db.ref(CHAT_LOOKERS_PATH).set(lst).then(callback);
 						} else {
 							callback();
@@ -176,7 +193,7 @@ var Firebase = {};
 					db.ref(CHAT_LISTENERS_PATH).once("value").then(function(val) {
 						var lst = val.val()[CHAT_LISTENERS_KEY];
 						if (lst.indexOf(uid) != -1) {
-							lst.splice(st.indexOf(uid), 1);
+							lst.splice(lst.indexOf(uid), 1);
 							db.ref(CHAT_LISTENERS_KEY).set(lst).then(callback);
 						} else {
 							callback();
@@ -271,7 +288,7 @@ var Firebase = {};
 				},
 
 				chat: {
-					startHunt: function(matched, queued) {
+					startHuntAsLooker: function(matched, queued) {
 						if (!IS_AUTHED()) return;
 
 						// Start as a Looker
@@ -287,8 +304,28 @@ var Firebase = {};
 						});
 					},
 
+					startHuntAsListener: function(matched, queued) {
+						if (!IS_AUTHED()) return;
+
+						// Start as a Looker
+						var uid = HavenUtils.generateUID(fba.currentUser);
+
+						chatInterface.getOneLooker(function(matchedUID) {
+							// We got a match!
+							matched(matchedUID);
+						}, function() {
+							// No matches; add to the queue
+							chatInterface.addToListeners(uid);
+							queued();
+						});
+					},
+
 					getOneListener: function(s, f) {
 						chatInterface.getOneListener(s, f);
+					},
+
+					getOneLooker: function(s, f) {
+						chatInterface.getOneLooker(s, f);
 					},
 
 					pairSelfLookerToListener: function(listenerUID, s, f) {

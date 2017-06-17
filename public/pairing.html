@@ -27,6 +27,50 @@
             width: 35%;
         }
     </style>
+    <script src="scripts/core.js"></script>
+    <script>
+        var selfState = -1; // -1 = Unknown; 0 = Looker; 1 = Listener
+        var intervalID = -1;
+
+        function startLookoutAs(state) {
+            selfState = state;
+            if (state == 0) {
+                // Start as a LOOKER! :D
+                var matched = function(listenerUID) {
+                    // Matched :o
+                    Firebase.chat.pairSelfLookerToListener(listenerUID, function(chatID) {
+                        window.location.replace("/chat.html");
+                    }, function() { });
+                };
+
+                Firebase.chat.startHuntAsLooker(matched, function() {
+                    intervalID = window.setInterval(function() {
+                        Firebase.chat.getOneListener(function(listenerUID) {
+                            window.clearInterval(intervalID);
+                            matched(listenerUID);
+                        }, function() { });
+                    }, 1000);
+                })
+            } else if (state == 1) {
+                // Start as a LISTENER! :D
+                var matched = function(lookerUID) {
+                    // Matched :o
+                    Firebase.chat.pairSelfListenerToLooker(lookerUID, function(chatID) {
+                        window.location.replace("/chat.html");
+                    }, function() { });
+                };
+
+                Firebase.chat.startHuntAsListener(matched, function() {
+                    intervalID = window.setInterval(function() {
+                        Firebase.chat.getOneLooker(function(lookerUID) {
+                            window.clearInterval(intervalID);
+                            matched(lookerUID);
+                        }, function() { });
+                    }, 1000);
+                })
+            }
+        }
+    </script>
 </head>
 <body class="body mdc-typography">
 <aside class="mdc-persistent-drawer">
@@ -70,35 +114,31 @@
             </section>
         </div>
     </header>
-            <center>
-                <main class="main mdc-toolbar-fixed-adjust" id="center-pair">
-                    <br />
-                    <br />
-                    <h2> I would like to... </h2>
 
-                    <div class="inline">
-                        <img src="images/profile_blank.png" class="profile-picture" />
-                        <br />
-                        <br />
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                            Talk out anonymously
-                        </button>
-                    </div>
+    <center>
+        <main class="main mdc-toolbar-fixed-adjust" id="center-pair">
+            <br /> <br />
+            <h2> I would like to... </h2>
 
-                    <div class="inline width-change">
+            <div class="inline">
+                <img src="images/profile_blank.png" class="profile-picture" />
+                <br /> <br />
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="startLookoutAs(0)">
+                    Talk out anonymously
+                </button>
+            </div>
 
-                    </div>
-                    <div class="inline">
-                        <img src="images/profile_blank.png" class="profile-picture" />
-                        <br />
-                        <br />
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                            Listen to someone
-                        </button>
-                        <br />
-                    </div>
-                </main>
-            </center>
+            <div class="inline width-change">&nbsp;</div>
+
+            <div class="inline">
+                <img src="images/profile_blank.png" class="profile-picture" />
+                <br /> <br />
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="startLookoutAs(1)">
+                    Listen to someone
+                </button>
+            </div>
+        </main>
+    </center>
 
 </div>
 <script src="scripts/core.js"></script>
