@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10813,8 +10813,7 @@ module.exports = SetupPage;
 
 /***/ }),
 /* 2 */,
-/* 3 */,
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const mdc = __webpack_require__(0);
@@ -10833,7 +10832,6 @@ function waitForHaven() {
 function setupLoggedInUi(user) {
   document.querySelectorAll(".login-button").forEach(button => button.style.display = 'none');
   document.querySelectorAll(".user-area").forEach(area => area.removeAttribute('style'));
-  document.querySelector
   loadUser(user);
 }
 
