@@ -268,6 +268,32 @@ var Firebase = {};
 							callback(chatID);
 						});
 					});
+				},
+
+				isHuntingAsLooker: function(uid, callback) {
+					if (!callback) return;
+
+					db.ref(CHAT_LOOKERS_PATH).once("value").then(function(val) {
+						var val = val.val();
+						if (val[CHAT_LOOKERS_KEY].indexOf(uid) != -1) {
+							callback(true);
+						} else {
+							callback(false);
+						}
+					});
+				},
+
+				isHuntingAsListener: function(uid, callback) {
+					if (!callback) return;
+					
+					db.ref(CHAT_LISTENERS_PATH).once("value").then(function(val) {
+						var val = val.val();
+						if (val[CHAT_LISTENERS_KEY].indexOf(uid) != -1) {
+							callback(true);
+						} else {
+							callback(false);
+						}
+					});
 				}
 			}
 		};
@@ -386,6 +412,14 @@ var Firebase = {};
 
 					sendMessage: function(text, chatID, callback) {
 						chatInterface.sendMessage(text, chatID, callback);
+					},
+
+					isHuntingAsLooker: function(uid, callback) {
+						chatInterface.isHuntingAsLooker(uid, callback);
+					},
+
+					isHuntingAsListener: function(uid, callback) {
+						chatInterface.isHuntingAsListener(uid, callback);
 					}
 				}
 			}
