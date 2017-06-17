@@ -10831,18 +10831,20 @@ function waitForHaven() {
 }
 
 function setupLoggedInUi(user) {
-  document.querySelector(".login-button").style.display = 'none';
-  document.querySelector(".user-area").removeAttribute('style');
+  document.querySelectorAll(".login-button").forEach(button => button.style.display = 'none');
+  document.querySelectorAll(".user-area").forEach(area => area.removeAttribute('style'));
+  document.querySelector
   loadUser(user);
 }
 
 function setupLoggedOutUi() {
-  document.querySelector(".user-area").style.display = 'none';
-  document.querySelector(".login-button").removeAttribute('style');
+  document.querySelectorAll(".user-area").forEach(area => area.style.display = 'none');
+  document.querySelectorAll(".login-button").forEach(button => button.removeAttribute('style'));
 }
 
 function loadUser(user) {
-  document.querySelector(".user-area-name").innerHTML = user.name;
+  document.querySelectorAll(".user-area-name").forEach(area => area.innerHTML = user.name);
+  document.querySelectorAll("img.user-image").forEach(img => img.src = user.photo);
 }
 
 function login() {
@@ -10864,13 +10866,15 @@ SetupPage().then(() => {
   });
 
   let menu = new mdc.menu.MDCSimpleMenu(document.querySelector('.mdc-simple-menu'));
-  document.querySelector(".user-area-name").addEventListener("click", () => {
+  document.querySelector("button.user-area-name").addEventListener("click", () => {
     menu.open = !menu.open;
   });
 
-  document.querySelector(".logout-button").addEventListener("click", () => {
-    logout();
-  });
+  document.querySelectorAll(".logout-button").forEach(button =>
+    button.addEventListener("click", () => {
+      logout();
+    })
+  );
 
   waitForHaven().then(() => {
     let Firebase = window.Firebase;
@@ -10878,11 +10882,13 @@ SetupPage().then(() => {
       setupLoggedInUi(Firebase.getCurrentUser());
     }
 
-    document.querySelector(".login-button").addEventListener("click", () => {
-      login().then((user) => {
-        setupLoggedInUi(user);
-      });
-    });
+    document.querySelectorAll(".login-button").forEach(button =>
+      button.addEventListener("click", () => {
+        login().then((user) => {
+          setupLoggedInUi(user);
+        });
+      })
+    );
 
   });
 });

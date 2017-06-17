@@ -35,6 +35,60 @@ html {
   color: white;
 }
 
-.user-area {
+.user-area.toolbar-item {
   padding-right: 16px;
+}
+
+img.user-image {
+  width: 80%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 10px;
+}
+
+h2.user-area-name {
+  display: block;
+}
+
+aside.mdc-persistent-drawer {
+  z-index: 5;
+}
+
+header.top-bar {
+  z-index: 5;
+}
+
+div.section {
+  left: 0px;
+}
+
+h1.hero-text {
+  display: inline-block;
+  margin-left: 15%;
+}
+
+#section1 {
+  background-color: #BEDB39
+}
+
+#section2 {
+  background-color: #FFE11A
+}
+
+#section3 {
+  background-color: #FD7400
+}
+
+#section4 {
+  background-color: #B30838
+}
+
+div.mdc-simple-menu {
+  background-color: #1F8A70
+}
+
+nav.mdc-persistent-drawer__drawer {
+  background-color: #F5F5F5;
+  border: none;
 }
