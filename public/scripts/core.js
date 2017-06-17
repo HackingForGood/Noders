@@ -264,7 +264,14 @@ var Firebase = {};
 
 				sendMessage: function(text, chatID, callback) {
 					db.ref(ONGOING_CHATS_PATH).once("value").then(function(val) {
-						db.ref(ONGOING_CHATS_PATH).set(val.val().concat(FirebaseFactory.generateChatMessage(GET_AUTHED_USER(), text))).then(function() {
+						var chats = val.val();
+
+						var msgs = chats[chatID];
+						msgs.concat(FirebaseFactory.generateChatMessage(GET_AUTHED_USER(), text));
+
+						chats[chatID] = msgs;
+
+						db.ref(ONGOING_CHATS_PATH).set(chats).then(function() {
 							callback(chatID);
 						});
 					});
