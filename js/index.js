@@ -14,7 +14,6 @@ function waitForHaven() {
 function setupLoggedInUi(user) {
   document.querySelectorAll(".login-button").forEach(button => button.style.display = 'none');
   document.querySelectorAll(".user-area").forEach(area => area.removeAttribute('style'));
-  document.querySelector
   loadUser(user);
 }
 
