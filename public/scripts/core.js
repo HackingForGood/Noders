@@ -116,7 +116,8 @@ var Firebase = {};
 			CHAT_LOOKERS_DEF_VALUE = [""],
 			CHAT_LOOKERS_SPLICER = function(lst) { return lst.splice(1); },
 			ONGOING_CHATS_PATH = "chat/ongoing",
-			ONGOING_CHATS_DEF_VALUE = {"_": [{"_": "_"}]};
+			ONGOING_CHATS_DEF_VALUE = {"_": [{"_": "_"}]},
+			GET_AUTHED_USER = function() { return firebase.auth().currentUser; };
 
 		var db = firebase.database();
 
@@ -222,6 +223,14 @@ var Firebase = {};
 							callback(chatID);
 						});
 					});
+				},
+
+				sendMessage: function(text, chatID, callback) {
+					db.ref(ONGOING_CHATS_PATH).once("value").then(function(val) {
+						db.ref(ONGOING_CHATS_PATH).set(val.val().concat(FirebaseFactory.generateChatMessage(GET_AUTHED_USER(), text))).then(function() {
+							callback(chatID);
+						});
+					});
 				}
 			}
 		};
@@ -316,6 +325,10 @@ var Firebase = {};
 
 					stopChat: function(chatID, callback) {
 						chatInterface.stopChat(chatID, callback);
+					},
+
+					sendMessage: function(text, chatID, callback) {
+						chatInterface.sendMessage(text, chatID, callback);
 					}
 				}
 			}
@@ -338,7 +351,7 @@ var Firebase = {};
 
 		generateChatMessage: function(processedUser, text) {
 			return {
-				"key": SHA1_HASH_GENERATOR(processedUser.uid + "_" + HavenUtils.epoch()),
+				"key": processedUser.uid + "_" + HavenUtils.epoch(),
 				"name": processedUser.name,
 				"text": text,
 				"profilepic": processedUser.photo
