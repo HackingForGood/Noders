@@ -51,9 +51,9 @@ Chat.prototype.loadMessages = function() {
 // Saves a new message on the Firebase DB.
 Chat.prototype.saveMessage = function(e) {
     Firebase.chat.sendMessage(window.chat.messageInput.value, window.chat.chatId, function () {
-        loadMessages();
+        window.chat.loadMessages();
         Chat.resetMaterialTextfield(document.getElementById("message"));
-        toggleButton();
+        window.chat.toggleButton();
     });
 };
 

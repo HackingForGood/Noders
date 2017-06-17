@@ -10945,20 +10945,19 @@ function Chat(user, chatId) {
 
 // Loads Chat messages history and listens for upcoming ones.
 Chat.prototype.loadMessages = function() {
-
-    Firebase.chat.getChatMessages(this.chatId, function (messages) {
+    Firebase.chat.getChatMessages(window.chat.chatId, function (messages) {
       messages.forEach(function (val) {
-          this.displayMessage(val.key,val.name, val.text, val.profilepic)
+          window.chat.displayMessage(val.key,val.name, val.text, val.profilepic)
       });
     });
 };
 
 // Saves a new message on the Firebase DB.
 Chat.prototype.saveMessage = function(e) {
-    Firebase.chat.sendMessage(this.messageInput.value, this.chatId, function () {
-        this.loadMessages();
-        Chat.resetMaterialTextfield(this.messageInput);
-        this.toggleButton();
+    Firebase.chat.sendMessage(window.chat.messageInput.value, window.chat.chatId, function () {
+        loadMessages();
+        Chat.resetMaterialTextfield(document.getElementById("message"));
+        toggleButton();
     });
 };
 
@@ -10989,7 +10988,7 @@ Chat.prototype.displayMessage = function(key, name, text, picUrl) {
     container.innerHTML = Chat.MESSAGE_TEMPLATE;
     div = container.firstChild;
     div.setAttribute('id', key);
-    this.messageList.appendChild(div);
+    window.chat.messageList.appendChild(div);
   }
   if (picUrl) {
     div.querySelector('.pic').style.backgroundImage = 'url(' + picUrl + ')';
@@ -11003,17 +11002,17 @@ Chat.prototype.displayMessage = function(key, name, text, picUrl) {
   }
   // Show the card fading-in and scroll to view the new message.
   setTimeout(function() {div.classList.add('visible')}, 1);
-  this.messageList.scrollTop = this.messageList.scrollHeight;
-  this.messageInput.focus();
+  window.chat.messageList.scrollTop = window.chat.messageList.scrollHeight;
+  window.chat.messageInput.focus();
 };
 
 // Enables or disables the submit button depending on the values of the input
 // fields.
 Chat.prototype.toggleButton = function() {
-  if (this.messageInput.value) {
-    this.submitButton.removeAttribute('disabled');
+  if (window.chat.messageInput.value) {
+    window.chat.submitButton.removeAttribute('disabled');
   } else {
-    this.submitButton.setAttribute('disabled', 'true');
+    window.chat.submitButton.setAttribute('disabled', 'true');
   }
 };
 
