@@ -21,7 +21,9 @@
     "extend": "^3.0.1",
     "extract-text-webpack-plugin": "^2.1.2",
     "material-components-web": "^0.13.0",
+    "minivents": "^2.1.0",
     "node-sass": "^4.5.3",
+    "pagepiling.js": "^1.5.4",
     "sass-loader": "^6.0.6",
     "webpack": "^2.6.1"
   }
