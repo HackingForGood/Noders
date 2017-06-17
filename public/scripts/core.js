@@ -267,7 +267,7 @@ var Firebase = {};
 						var chats = val.val();
 
 						var msgs = chats[chatID];
-						msgs.concat(FirebaseFactory.generateChatMessage(GET_AUTHED_USER(), text));
+						msgs = msgs.concat(FirebaseFactory.generateChatMessage(GET_AUTHED_USER(), text));
 
 						chats[chatID] = msgs;
 
