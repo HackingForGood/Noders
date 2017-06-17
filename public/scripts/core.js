@@ -181,7 +181,7 @@ var Firebase = {};
 					db.ref(CHAT_LOOKERS_PATH).once("value").then(function(val) {
 						var lst = val.val()[CHAT_LOOKERS_KEY];
 						if (lst.indexOf(uid) != -1) {
-							lst.splice(st.indexOf(uid), 1);
+							lst.splice(lst.indexOf(uid), 1);
 							db.ref(CHAT_LOOKERS_PATH).set(lst).then(callback);
 						} else {
 							callback();
@@ -193,7 +193,7 @@ var Firebase = {};
 					db.ref(CHAT_LISTENERS_PATH).once("value").then(function(val) {
 						var lst = val.val()[CHAT_LISTENERS_KEY];
 						if (lst.indexOf(uid) != -1) {
-							lst.splice(st.indexOf(uid), 1);
+							lst.splice(lst.indexOf(uid), 1);
 							db.ref(CHAT_LISTENERS_KEY).set(lst).then(callback);
 						} else {
 							callback();
