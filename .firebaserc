@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "haven-c0b14"
+    "default": "haven-c0b14",
+    "caht": "haven-c0b14"
   }
 }
