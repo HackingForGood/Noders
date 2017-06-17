@@ -206,7 +206,7 @@ var Firebase = {};
 
 					db.ref(ONGOING_CHATS_PATH).once("value").then(function(val) {
 						var newVal = val.val();
-						newVal[chatID] = FirebaseFactory.initialChatMessage();
+						newVal[chatID] = [].concat(FirebaseFactory.initialChatMessage());
 
 						db.ref(ONGOING_CHATS_PATH).set(newVal).then(function() {
 							s(chatID);
