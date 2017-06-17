@@ -63,7 +63,7 @@ var Firebase = {};
 				phone: result.user.phoneNumber,
 				photo: result.user.photoURL
 			};
-		}
+		},
 
 		processCurrentUser: function(currentUser) {
 			return {
