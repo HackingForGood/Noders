@@ -1,10 +1,28 @@
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 const glob = require('glob');
+const extend = require('extend');
+
+function toObject(paths) {
+  var ret = {};
+
+  paths.forEach(function(path) {
+    // you can define entry names mapped to [name] here
+    ret[path.split('/').slice(-1)[0]] = path;
+  });
+
+  return ret;
+}
 
 module.exports = {
-  entry: ['./js/index.js', './scss/index.scss'],
+  entry: extend(
+    toObject(glob.sync("./js/*.js")),
+    {
+      scss: ['./scss/index.scss']
+    }
+  ),
+
   output: {
-    filename: 'public/dist/bundle.js'
+    filename: 'public/dist/[name]'
   },
   module: {
 
@@ -25,7 +43,7 @@ module.exports = {
                 {
                     loader: 'sass-loader',
                     options: {
-                      includePaths: ['node_modules'] 
+                      includePaths: ['node_modules']
                     }
                 }
                 ]),
