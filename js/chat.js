@@ -43,7 +43,7 @@ function Chat(user, chatId) {
 Chat.prototype.loadMessages = function() {
     Firebase.chat.getChatMessages(window.chat.chatId, function (messages) {
       messages.forEach(function (val) {
-          displayMessage(val.key,val.name, val.text, val.profilepic)
+          window.chat.displayMessage(val.key,val.name, val.text, val.profilepic)
       });
     });
 };
