@@ -55,7 +55,7 @@
                 // Start as a LISTENER! :D
                 var matched = function(lookerUID) {
                     // Matched :o
-                    Firebase.chat.pairSelfListenerToLooker(listenerUID, function(chatID) {
+                    Firebase.chat.pairSelfListenerToLooker(lookerUID, function(chatID) {
                         window.location.replace("/chat.html");
                     }, function() { });
                 };
@@ -65,7 +65,7 @@
                         Firebase.chat.getOneLooker(function(lookerUID) {
                             window.clearInterval(intervalID);
                             matched(lookerUID);
-                        }, function() { })
+                        }, function() { });
                     }, 1000);
                 })
             }
