@@ -162,41 +162,61 @@ var Firebase = {};
 				addToLookers: function(uid, callback) {
 					db.ref(CHAT_LOOKERS_PATH).once("value").then(function(val) {
 						var newVal = val.val();
-						newVal[CHAT_LOOKERS_KEY] = newVal[CHAT_LOOKERS_KEY].concat(uid);
-
-						db.ref(CHAT_LOOKERS_PATH).set(newVal).then(callback);
+						if (newVal[CHAT_LOOKERS_KEY].indexOf(uid) == -1) {
+							newVal[CHAT_LOOKERS_KEY] = newVal[CHAT_LOOKERS_KEY].concat(uid);
+							db.ref(CHAT_LOOKERS_PATH).set(newVal).then(callback);
+						} else {
+							if(callback) {
+								callback();
+							}
+						}
 					});
 				},
 
 				addToListeners: function(uid, callback) {
 					db.ref(CHAT_LISTENERS_PATH).once("value").then(function(val) {
 						var newVal = val.val();
-						newVal[CHAT_LISTENERS_KEY] = newVal[CHAT_LISTENERS_KEY].concat(uid);
-
-						db.ref(CHAT_LISTENERS_PATH).set(newVal).then(callback);
+						if (newVal[CHAT_LISTENERS_KEY].indexOf(uid) == -1) {
+							newVal[CHAT_LISTENERS_KEY] = newVal[CHAT_LISTENERS_KEY].concat(uid);
+							db.ref(CHAT_LISTENERS_PATH).set(newVal).then(callback);
+						} else {
+							if (callback) {
+								callback();
+							}
+						}
 					});
 				},
 
 				removeLooker: function(uid, callback) {
 					db.ref(CHAT_LOOKERS_PATH).once("value").then(function(val) {
-						var lst = val.val()[CHAT_LOOKERS_KEY];
-						if (lst.indexOf(uid) != -1) {
+						var val = val.val();
+						if (val[CHAT_LOOKERS_KEY].indexOf(uid) != -1) {
+							var lst = val[CHAT_LOOKERS_KEY];
 							lst.splice(lst.indexOf(uid), 1);
-							db.ref(CHAT_LOOKERS_PATH).set(lst).then(callback);
+
+							val[CHAT_LOOKERS_KEY] = lst;
+							db.ref(CHAT_LOOKERS_PATH).set(val).then(callback);
 						} else {
-							callback();
+							if (callback) {
+								callback();
+							}
 						}
 					});
 				},
 
 				removeListener: function(uid, callback) {
 					db.ref(CHAT_LISTENERS_PATH).once("value").then(function(val) {
-						var lst = val.val()[CHAT_LISTENERS_KEY];
-						if (lst.indexOf(uid) != -1) {
+						var val = val.val();
+						if (val[CHAT_LISTENERS_KEY].indexOf(uid) != -1) {
+							var lst = val[CHAT_LISTENERS_KEY];
 							lst.splice(lst.indexOf(uid), 1);
-							db.ref(CHAT_LISTENERS_KEY).set(lst).then(callback);
+
+							val[CHAT_LISTENERS_KEY] = lst;
+							db.ref(CHAT_LISTENERS_PATH).set(val).then(callback);
 						} else {
-							callback();
+							if (callback) {
+								callback();
+							}
 						}
 					});
 				},
@@ -344,7 +364,7 @@ var Firebase = {};
 						if (!IS_AUTHED()) return;
 
 						// Remove from both lists if existed in both
-						chatInterface.removeListener(GET_AUTHED_UID, function() {
+						chatInterface.removeListener(GET_AUTHED_UID(), function() {
 							chatInterface.removeLooker(lookerUID, function() {
 								// Listener UID, Looker UID
 								chatInterface.startChat(GET_AUTHED_UID(), lookerUID, s, f);
