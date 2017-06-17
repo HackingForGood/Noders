@@ -75,6 +75,12 @@ const mdc = __webpack_require__(2);
 document.addEventListener("DOMContentLoaded", function(){
   // Handler when the DOM is fully loaded
   mdc.autoInit();
+
+  let drawerEl = document.querySelector(".mdc-persistent-drawer");
+  let drawer = new mdc.drawer.MDCPersistentDrawer(drawerEl);
+  document.querySelector(".drawer-toggle").addEventListener("click", () => {
+    drawer.open = !drawer.open;
+  });
 });
 
 
