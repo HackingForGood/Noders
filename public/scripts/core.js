@@ -85,12 +85,12 @@ var Firebase = {};
 
 		generateUID: function(user) {
 			if (user.user && user.user.email) {
-				return SHA1_HASH_GENERATOR(user.user.email);
+				return SHA1_HASH_GENERATOR()(user.user.email);
 			} else if (user.email) {
-				return SHA1_HASH_GENERATOR(user.email);
+				return SHA1_HASH_GENERATOR()(user.email);
 			}
 
-			return SHA1_HASH_GENERATOR(user);
+			return SHA1_HASH_GENERATOR()(user);
 		},
 
 		generateChatID: function(listenerUID, lookerUID) {

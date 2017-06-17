@@ -36,12 +36,6 @@ function Chat(user, chatId) {
     var buttonTogglingHandler = this.toggleButton.bind(this);
     this.messageInput.addEventListener('keyup', buttonTogglingHandler);
     this.messageInput.addEventListener('change', buttonTogglingHandler);
-
-    // Events for image upload.
-    this.submitImageButton.addEventListener('click', function (e) {
-        e.preventDefault();
-        this.mediaCapture.click();
-    }.bind(this));
     window.setInterval(this.loadMessages, 1000);
 }
 
@@ -120,7 +114,9 @@ Chat.prototype.toggleButton = function() {
 };
 
 haven.firebaseScriptInjectLoaded = function() {
-  Firebase.getActiveChatID(Firebase.getCurrentUser().uid, function(chatId) {
-    window.chat = new Chat(Firebase.getCurrentUser(), chatID);
-  });
+  window.setTimeout(function() {
+    Firebase.chat.getActiveChatID(Firebase.getCurrentUser().uid, function(chatId) {
+      window.chat = new Chat(Firebase.getCurrentUser(), chatId);
+    });
+  }, 1000);
 };
