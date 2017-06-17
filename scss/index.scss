@@ -1,3 +1,36 @@
 // Using the whole library
 @import "material-components-web/material-components-web";
 
+
+/* Ensure layout covers the entire screen. */
+html {
+  height: 100%;
+}
+
+/* Place drawer and content side by side. */
+.body {
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+}
+
+/* Stack toolbar and main on top of each other. */
+.content {
+  display: inline-flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.main {
+  padding-left: 16px;
+}
+
+.top-bar button {
+  color: white;
+}

@@ -63,29 +63,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const mdc = __webpack_require__(2);
-
-document.addEventListener("DOMContentLoaded", function(){
-  // Handler when the DOM is fully loaded
-  mdc.autoInit();
-});
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -10811,11 +10793,40 @@ function createIsUnavailable() {
 });
 
 /***/ }),
-/* 3 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(0);
-module.exports = __webpack_require__(1);
+const mdc = __webpack_require__(0);
+
+function SetupPage() {
+    return new Promise(function(resolve, reject) {
+        document.addEventListener("DOMContentLoaded", function(){
+            // Handler when the DOM is fully loaded
+            mdc.autoInit();
+            resolve();
+        });
+    });
+}
+
+module.exports = SetupPage;
+
+
+/***/ }),
+/* 2 */,
+/* 3 */,
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const mdc = __webpack_require__(0);
+const SetupPage = __webpack_require__(1);
+
+SetupPage().then(() => {
+  let drawerEl = document.querySelector(".mdc-persistent-drawer");
+  let drawer = new mdc.drawer.MDCPersistentDrawer(drawerEl);
+  document.querySelector(".drawer-toggle").addEventListener("click", () => {
+    drawer.open = !drawer.open;
+  });
+});
 
 
 /***/ })
