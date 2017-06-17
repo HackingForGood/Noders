@@ -1,9 +1,7 @@
 const mdc = require('material-components-web/dist/material-components-web');
+const SetupPage = require('./setup-page');
 
-document.addEventListener("DOMContentLoaded", function(){
-  // Handler when the DOM is fully loaded
-  mdc.autoInit();
-
+SetupPage().then(() => {
   let drawerEl = document.querySelector(".mdc-persistent-drawer");
   let drawer = new mdc.drawer.MDCPersistentDrawer(drawerEl);
   document.querySelector(".drawer-toggle").addEventListener("click", () => {
