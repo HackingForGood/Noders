@@ -115,7 +115,8 @@ var Firebase = {};
 			CHAT_LOOKERS_KEY = "_",
 			CHAT_LOOKERS_DEF_VALUE = [""],
 			CHAT_LOOKERS_SPLICER = function(lst) { return lst.splice(1); },
-			ONGOING_CHATS_PATH = "chat/ongoing";
+			ONGOING_CHATS_PATH = "chat/ongoing",
+			ONGOING_CHATS_DEF_VALUE = {"_": [{"_": "_"}]};
 
 		var db = firebase.database();
 
@@ -129,6 +130,9 @@ var Firebase = {};
 				var lookers = {};
 				lookers[CHAT_LOOKERS_KEY] = CHAT_LOOKERS_DEF_VALUE;
 				db.ref(CHAT_LOOKERS_PATH).set(lookers);
+
+				var outgoingChats = ONGOING_CHATS_DEF_VALUE;
+				db.ref(ONGOING_CHATS_PATH).set(outgoingChats);
 			},
 
 			chat: {
@@ -200,7 +204,7 @@ var Firebase = {};
 
 				getActiveChatID: function(currentUID, callback) {
 					db.ref(ONGOING_CHATS_PATH).once("value").then(function(val) {
-						var keys = Object.keys(val.val()).filter(k => HavenUtils.getChatParticipants(k).indexOf(currentUser) != -1);
+						var keys = Object.keys(val.val()).filter(k => HavenUtils.getChatParticipants(k).indexOf(currentUID) != -1);
 						if (keys.length == 1) {
 							callback(keys[0]);
 						} else {
@@ -215,7 +219,7 @@ var Firebase = {};
 						delete newVal[chatID];
 
 						db.ref(ONGOING_CHATS_PATH).set(newVal).then(function() {
-							s(chatID);
+							callback(chatID);
 						});
 					});
 				}
