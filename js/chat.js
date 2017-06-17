@@ -113,10 +113,4 @@ Chat.prototype.toggleButton = function() {
   }
 };
 
-haven.firebaseScriptInjectLoaded = function() {
-  window.setTimeout(function() {
-    Firebase.chat.getActiveChatID(Firebase.getCurrentUser().uid, function(chatId) {
-      window.chat = new Chat(Firebase.getCurrentUser(), chatId);
-    });
-  }, 1000);
-};
+module.exports = Chat;

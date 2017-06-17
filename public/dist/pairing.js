@@ -63,11 +63,46 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Events = __webpack_require__(5);
+
+const SIGNIN_EVENT_NAME = "signin";
+const SIGNOUT_EVENT_NAME = "signout";
+
+let events = new Events();
+
+function onSignIn(callback) {
+  events.on(SIGNIN_EVENT_NAME, callback);
+}
+
+function onSignOut(callback) {
+  events.on(SIGNOUT_EVENT_NAME, callback);
+}
+
+function signIn() {
+  events.emit(SIGNIN_EVENT_NAME);
+}
+
+function signOut() {
+  events.emit(SIGNOUT_EVENT_NAME);
+}
+
+module.exports = {
+  onSignIn,
+  onSignOut,
+  signIn,
+  signOut
+};
+
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -10793,10 +10828,55 @@ function createIsUnavailable() {
 });
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const mdc = __webpack_require__(0);
+const authEvents = __webpack_require__(0);
+
+function signIn() {
+  return new Promise(function(resolve, reject) {
+    window.Firebase.requestAuthentication(resolve, reject);
+  }).then(() => {
+    authEvents.signIn();
+  });
+}
+
+function signOut() {
+  window.Firebase.signOut();
+  authEvents.signOut();
+}
+
+module.exports = {
+  signIn,
+  signOut
+};
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+
+function waitForHaven() {
+  return new Promise(function(resolve, reject) {
+    if(window.haven.loading) {
+      window.haven.firebaseScriptInjectLoaded = resolve;
+    } else {
+      resolve();
+    }
+  });
+};
+
+module.exports = {
+  waitForHaven
+};
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const mdc = __webpack_require__(1);
 
 function SetupPage() {
     return new Promise(function(resolve, reject) {
@@ -10809,6 +10889,76 @@ function SetupPage() {
 }
 
 module.exports = SetupPage;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+module.exports=function(n){var t={},e=[];n=n||this,n.on=function(n,e,l){(t[n]=t[n]||[]).push([e,l])},n.off=function(n,l){n||(t={});for(var o=t[n]||e,i=o.length=l?o.length:0;i--;)l==o[i][0]&&o.splice(i,1)},n.emit=function(n){for(var l,o=t[n]||e,i=o.length>0?o.slice(0,o.length):o,c=0;l=i[c++];)l[0].apply(l[1],e.slice.call(arguments,1))}};
+
+/***/ }),
+/* 6 */,
+/* 7 */,
+/* 8 */,
+/* 9 */,
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const mdc = __webpack_require__(1);
+const SetupPage = __webpack_require__(4);
+const authEvents = __webpack_require__(0);
+const auth = __webpack_require__(2);
+const havenUtil = __webpack_require__(3);
+
+SetupPage().then(() => {
+  //Page specific setup
+  let drawerEl = document.querySelector(".mdc-persistent-drawer");
+  let drawer = new mdc.drawer.MDCPersistentDrawer(drawerEl);
+  document.querySelector(".drawer-toggle").addEventListener("click", () => {
+    drawer.open = !drawer.open;
+  });
+
+  let menu = new mdc.menu.MDCSimpleMenu(document.querySelector('.mdc-simple-menu'));
+  document.querySelector("button.user-area-name").addEventListener("click", () => {
+    menu.open = !menu.open;
+  });
+
+  // Authentication
+  authEvents.onSignOut(() => {
+    document.querySelectorAll(".user-area").forEach(area => area.style.display = 'none');
+    document.querySelectorAll(".login-button").forEach(button => button.removeAttribute('style'));
+  });
+
+  authEvents.onSignIn(() => {
+    document.querySelectorAll(".login-button").forEach(button => button.style.display = 'none');
+    document.querySelectorAll(".user-area").forEach(area => area.removeAttribute('style'));
+    let user = window.Firebase.getCurrentUser();
+    document.querySelectorAll(".user-area-name").forEach(area => area.innerHTML = user.name);
+    document.querySelectorAll("img.user-image").forEach(img => img.src = user.photo);
+  });
+
+  document.querySelectorAll(".logout-button").forEach(button =>
+    button.addEventListener("click", () => {
+      auth.signOut();
+    })
+  );
+
+  havenUtil.waitForHaven().then(() => {
+    window.setTimeout(function() {
+    let Firebase = window.Firebase;
+    if(Firebase.isLoggedIn()) {
+      authEvents.signIn();
+    }
+
+    document.querySelectorAll(".login-button").forEach(button =>
+      button.addEventListener("click", () => {
+        auth.signIn();
+      })
+    );
+  }, 1000);
+  });
+});
 
 
 /***/ })

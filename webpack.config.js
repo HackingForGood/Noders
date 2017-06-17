@@ -15,7 +15,7 @@ function toObject(paths) {
 
 module.exports = {
   entry: extend(
-    toObject(glob.sync("./js/*.js")),
+    toObject(glob.sync("./js/entry/*.js")),
     {
       scss: ['./scss/index.scss']
     }
